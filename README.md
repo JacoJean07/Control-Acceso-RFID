@@ -7,7 +7,22 @@ El proyecto nace como un reto para demostrar dominio de **Programación Orientad
 > Ya funciona el flujo completo: se "pasa" una tarjeta por un lector simulado, se decide si la persona entra, se guarda el registro, se detectan anomalías y se genera un reporte PDF.
 > Es una base para seguir construyendo, no un producto terminado. La sección [Limitaciones de la demo](#11-limitaciones-de-la-demo) explica qué falta y la sección [Preguntas abiertas](#13-preguntas-abiertas-para-el-equipo) lo que todavía hay que decidir.
 
-![Ventana principal de la demo](docs/img/ventana.png)
+📖 **Documentación visual (GitHub Pages):** https://jacojean07.github.io/Control-Acceso-RFID/
+
+![Ventana principal de la demo](docs/img/ventana-registros.png)
+
+<details>
+<summary>Más capturas (alertas, tarjetas y reporte PDF)</summary>
+
+| Alertas | Tarjetas |
+|---|---|
+| ![Pestaña de alertas](docs/img/ventana-alertas.png) | ![Pestaña de tarjetas](docs/img/ventana-tarjetas.png) |
+
+**Reporte PDF** ([descargar ejemplo](docs/img/reporte-ejemplo.pdf)):
+
+<img src="docs/img/reporte.png" alt="Reporte PDF" width="480">
+
+</details>
 
 ---
 
@@ -226,7 +241,7 @@ Control-Acceso-RFID/
 ├── LICENSE                         GPL-3.0
 ├── .gitignore                      Ignora target/, reportes/, archivos de IDE
 ├── .project, .classpath, .settings/   Configuración de Eclipse (se mantienen, ver §9)
-├── docs/img/ventana.png            Captura de la ventana
+├── docs/                          Sitio de GitHub Pages (index.html) + capturas en docs/img/
 └── src/
     ├── main/
     │   ├── java/com/shadow/controlacceso/
