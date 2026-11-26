@@ -296,6 +296,37 @@ ul.check li::before { content: "–"; position: absolute; left: 6px; color: var(
 
 footer { border-top: 1px solid var(--border); padding: 24px 0 40px; color: var(--muted); font-size: 14px; }
 
+
+/* ---------- Casos de uso ---------- */
+.uc-diagram { background: var(--surface); }
+.uc-diagram img { width: 100%; height: auto; }
+details.uc > summary { flex-wrap: wrap; }
+.tag.pend { background: var(--surface-2); color: var(--muted); border: 1px dashed var(--border); }
+.uc-meta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 20px; font-size: 14.5px; margin: 14px 0; }
+.uc-meta span, .uc-impl span { display: block; font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.uc-cols { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 20px; }
+.uc-cols h5 { margin: 0 0 6px; font-size: 14px; }
+.uc-steps, .uc-alt { margin: 0; padding-left: 20px; font-size: 14.5px; }
+.uc-steps li, .uc-alt li { margin: 3px 0; }
+.uc-impl { font-size: 14px; margin: 10px 0 0; overflow-wrap: anywhere; }
+.uc-impl span { display: inline; margin-right: 6px; }
+.uc-pend h4 { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.uc-pend .who-line { font-size: 13px; margin-bottom: 6px; }
+/* ---------- Mejoras ---------- */
+ul.mej { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 7px; }
+ul.mej li { display: grid; grid-template-columns: 58px minmax(0, 1fr) 22px; gap: 10px; align-items: start; font-size: 14.5px; }
+.prio { font-size: 11.5px; font-weight: 700; border-radius: 999px; padding: 1px 0; text-align: center; margin-top: 2px; }
+.prio.hi { background: var(--bad-soft); color: var(--bad); }
+.prio.mid { background: var(--accent-soft); color: var(--accent-text); }
+.prio.lo { background: var(--surface-2); color: var(--muted); }
+.eff { font: 700 12px ui-monospace, Menlo, monospace; color: var(--muted); text-align: right; margin-top: 2px; }
+.roadmap { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; counter-reset: f; }
+.roadmap li { background: var(--surface); border: 1px solid var(--border); border-top: 4px solid var(--accent); border-radius: 10px; padding: 14px 16px; box-shadow: var(--shadow); }
+.roadmap li b { display: block; margin-bottom: 6px; }
+.roadmap li span { color: var(--muted); font-size: 14.5px; }
+@media (max-width: 960px) { .roadmap { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .roadmap, .uc-meta, .uc-cols { grid-template-columns: minmax(0, 1fr); } }
+
 /* ---------- Lightbox ---------- */
 .lightbox { position: fixed; inset: 0; background: rgba(8,10,14,.86); display: none; place-items: center; z-index: 50; padding: 16px; cursor: zoom-out; }
 .lightbox.open { display: grid; }
@@ -359,6 +390,7 @@ footer { border-top: 1px solid var(--border); padding: 24px 0 40px; color: var(-
     <div class="actions">
       <a class="btn primary" href="#ejecutar">Cómo ejecutarlo</a>
       <a class="btn" href="#capturas">Ver capturas</a>
+      <a class="btn" href="#casos-de-uso">Casos de uso</a>
       <a class="btn" href="img/reporte-ejemplo.pdf">Reporte PDF de ejemplo</a>
     </div>
     <div class="hero-shot">
@@ -385,6 +417,8 @@ footer { border-top: 1px solid var(--border); padding: 24px 0 40px; color: var(-
       <li><a href="#limitaciones">Limitaciones</a></li>
       <li><a href="#extender">Cómo extenderlo</a></li>
       <li><a href="#preguntas">Preguntas abiertas</a></li>
+      <li><a href="#casos-de-uso">Casos de uso</a></li>
+      <li><a href="#mejoras">Posibles mejoras</a></li>
     </ol>
   </nav>
 
@@ -989,6 +1023,238 @@ java -jar target/control-acceso-obras-0.0.1-SNAPSHOT.jar --consola</pre>
   </div>
 </section>
 
+<!-- =============================================================== -->
+<section id="casos-de-uso">
+  <h2><span class="num">15</span> Casos de uso</h2>
+  <p class="sub">Qué puede hacer cada actor con el sistema. <b>CU-01 a CU-07</b> están implementados en la demo; <b>CU-08 a CU-15</b> son la propuesta para las siguientes iteraciones.
+  Versión en texto: <a href="https://github.com/JacoJean07/Control-Acceso-RFID/blob/ccr-d7d9911e-nawjhb/docs/CASOS_DE_USO.md"><code>docs/CASOS_DE_USO.md</code></a>.</p>
+  <div class="shot uc-diagram"><a href="img/casos-de-uso.svg"><img src="img/casos-de-uso.svg" alt="Diagrama de casos de uso con los actores Trabajador, Lector RFID, Guardia, Supervisor y Administrador" loading="lazy" width="960" height="730"></a></div>
+
+  <h3>Actores</h3>
+  <div class="grid g3">
+    <div class="card"><h4>Trabajador</h4><p>Pasa la tarjeta para entrar a una zona.</p></div>
+    <div class="card"><h4>Lector RFID <span class="tag info">sistema</span></h4><p>Lee el UID en la puerta y lo envía. En la demo es <code>SimuladorLectorRFID</code>.</p></div>
+    <div class="card"><h4>Guardia</h4><p>Vigila los accesos y las alertas en tiempo real.</p></div>
+    <div class="card"><h4>Supervisor</h4><p>Revisa el historial y genera reportes.</p></div>
+    <div class="card"><h4>Administrador</h4><p>Gestiona tarjetas, trabajadores, zonas y la configuración.</p></div>
+    <div class="card"><h4>Nota</h4><p>La demo no tiene login, así que quien la abre actúa como guardia, supervisor y administrador a la vez.</p></div>
+  </div>
+
+  <h3>Reglas de negocio</h3>
+  <div class="table-wrap"><table><thead><tr><th>Código</th><th>Regla</th></tr></thead><tbody>
+<tr><td><b>RN-01</b></td><td>Entra quien tenga un nivel <b>igual o mayor</b> al de la zona (Básico &lt; Restringido &lt; Crítico).</td></tr>
+<tr><td><b>RN-02</b></td><td>Una tarjeta no registrada nunca da acceso.</td></tr>
+<tr><td><b>RN-03</b></td><td>Una tarjeta bloqueada nunca da acceso.</td></tr>
+<tr><td><b>RN-04</b></td><td>Orden de revisión: existe → activa → nivel. El primer "no" decide el motivo.</td></tr>
+<tr><td><b>RN-05</b></td><td>Todo intento se registra, incluso con tarjetas desconocidas.</td></tr>
+<tr><td><b>RN-06</b></td><td>El UID nunca se guarda: solo el SHA-256 del UID normalizado.</td></tr>
+<tr><td><b>RN-07</b></td><td>3 o más denegados de la misma tarjeta en 5 minutos → <code>INTENTOS_REPETIDOS</code>.</td></tr>
+<tr><td><b>RN-08</b></td><td>Un permitido fuera de 06:00–20:00 entra, pero genera <code>FUERA_DE_HORARIO</code>.</td></tr>
+<tr><td><b>RN-09</b></td><td>Una tarjeta desconocida o bloqueada genera su alerta correspondiente.</td></tr>
+</tbody></table></div>
+<h3>Implementados</h3>
+<details class="acc uc"><summary><span class="tag ok">CU-01</span> Solicitar acceso a una zona <span class="hint">· Trabajador, Lector RFID · «include» CU-02</span></summary><div class="body">
+<div class="uc-meta">
+<div><span>Objetivo</span>Que el trabajador entre a una zona si tiene permiso.</div><div><span>Precondición</span>La zona existe y su lector funciona.</div><div><span>Postcondición</span>Queda el registro (CU-02) y, si corresponde, alertas (CU-03).</div>
+<div><span>Reglas</span>RN-01, RN-02, RN-03, RN-04, RN-06</div>
+</div><div class="uc-cols"><div><h5>Flujo principal</h5><ol class="uc-steps">
+<li>El trabajador acerca su tarjeta al lector de la zona.</li>
+<li>El lector envía una <code>LecturaRFID</code> (UID, zona, hora).</li>
+<li>El sistema busca la zona por su código.</li>
+<li>Calcula el hash del UID.</li>
+<li>Busca la tarjeta por hash y a su titular.</li>
+<li>Verifica que la tarjeta esté activa.</li>
+<li>Verifica que el nivel del trabajador alcance el de la zona.</li>
+<li>Resultado <b>PERMITIDO</b>.</li>
+<li>Incluye CU-02 (registrar el intento).</li>
+<li>Muestra el resultado en verde.</li>
+</ol></div><div><h5>Flujos alternativos</h5>
+<ul class="uc-alt">
+<li><b>3a</b> La zona no existe: Error; no se registra nada.</li>
+<li><b>4a</b> UID sin caracteres hexadecimales: Error "UID inválido"; no se registra.</li>
+<li><b>5a</b> La tarjeta no existe: <code>DENEGADO_TARJETA_DESCONOCIDA</code> → paso 9, en rojo.</li>
+<li><b>6a</b> Tarjeta bloqueada: <code>DENEGADO_TARJETA_INACTIVA</code> → paso 9.</li>
+<li><b>7a</b> Nivel insuficiente: <code>DENEGADO_NIVEL_INSUFICIENTE</code> → paso 9.</li>
+</ul>
+</div></div>
+<p class="uc-impl"><span>Implementación</span> <code>ControlAccesoService.procesarLectura()</code> / <code>evaluar()</code>, <code>CriptoService.hashUid()</code>, <code>Trabajador.puedeIngresarA()</code>, <code>Nivel.alcanza()</code>, <code>SimuladorLectorRFID</code></p><p class="uc-impl"><span>Tests</span> <code>permiteAccesoConNivelSuficiente</code>, <code>aceptaElUidEnCualquierFormato</code>, <code>niegaAccesoConNivelInsuficiente</code>, <code>tarjetaDesconocidaSeNiegaYGeneraAlerta</code>, <code>tarjetaBloqueadaSeNiega</code>, <code>zonaInexistenteLanzaExcepcion</code></p>
+</div></details>
+<details class="acc uc"><summary><span class="tag ok">CU-02</span> Registrar intento de acceso <span class="hint">· (sistema, dentro de CU-01) · incluido por CU-01</span></summary><div class="body">
+<div class="uc-meta">
+<div><span>Objetivo</span>Dejar constancia de cada intento para auditoría y para detectar anomalías.</div><div><span>Precondición</span>CU-01 ya decidió el resultado.</div><div><span>Postcondición</span>Hay una fila nueva en <code>registro_acceso</code>.</div>
+<div><span>Reglas</span>RN-05, RN-06</div>
+</div><div class="uc-cols"><div><h5>Flujo principal</h5><ol class="uc-steps">
+<li>Arma un <code>RegistroAcceso</code> (hash, tarjeta o vacío, zona, hora, resultado).</li>
+<li>Lo guarda en la BD.</li>
+<li>Recibe el id generado.</li>
+<li>Si hay anomalías, se extiende con CU-03.</li>
+</ol></div><div><h5>Flujos alternativos</h5>
+<ul class="uc-alt">
+<li><b>2a</b> Falla la base de datos: Se lanza <code>DatosAccesoException</code>; la lectura no se completa.</li>
+</ul>
+</div></div>
+<p class="uc-impl"><span>Implementación</span> <code>JdbcRegistroRepository.guardar()</code>, <code>RegistroAcceso.conId()</code></p><p class="uc-impl"><span>Tests</span> Cubierto por todo <code>ControlAccesoServiceTest</code></p>
+</div></details>
+<details class="acc uc"><summary><span class="tag ok">CU-03</span> Detectar anomalías y generar alertas <span class="hint">· (sistema); las ve el Guardia · «extend» CU-02</span></summary><div class="body">
+<div class="uc-meta">
+<div><span>Objetivo</span>Avisar de situaciones sospechosas, aunque no siempre impliquen negar el acceso.</div><div><span>Precondición</span>El registro ya está guardado y tiene id.</div><div><span>Postcondición</span>Cero o más alertas guardadas, enlazadas al registro.</div>
+<div><span>Reglas</span>RN-07, RN-08, RN-09</div>
+</div><div class="uc-cols"><div><h5>Flujo principal</h5><ol class="uc-steps">
+<li>Analiza el registro recién guardado.</li>
+<li>Tarjeta desconocida → alerta <code>TARJETA_DESCONOCIDA</code>.</li>
+<li>Tarjeta bloqueada → alerta <code>TARJETA_INACTIVA</code>.</li>
+<li>Si fue denegado: cuenta los denegados del hash en 5 min; si son 3 o más → <code>INTENTOS_REPETIDOS</code>.</li>
+<li>Si fue permitido fuera de 06:00–20:00 → <code>FUERA_DE_HORARIO</code>.</li>
+<li>Guarda cada alerta y la devuelve a la UI.</li>
+</ol></div><div><h5>Flujos alternativos</h5>
+<p class="caption" style="margin:0">No tiene. Un mismo intento puede generar varias alertas.</p>
+</div></div>
+<p class="uc-impl"><span>Implementación</span> <code>DetectorAnomalias.analizar()</code>, <code>AlertaRepository.guardar()</code>, <code>RegistroRepository.contarDenegadosDesde()</code></p><p class="uc-impl"><span>Tests</span> <code>tresIntentosFallidosGeneranAlertaDeIntentosRepetidos</code>, <code>accesoNocturnoSePermitePeroGeneraAlerta</code> y otros</p>
+</div></details>
+<details class="acc uc"><summary><span class="tag ok">CU-04</span> Consultar historial de accesos <span class="hint">· Guardia, Supervisor</span></summary><div class="body">
+<div class="uc-meta">
+<div><span>Objetivo</span>Ver quién intentó entrar, dónde, cuándo y con qué resultado.</div><div><span>Precondición</span>Ninguna (no hay login).</div><div><span>Postcondición</span>Ninguna: es una consulta.</div>
+</div><div class="uc-cols"><div><h5>Flujo principal</h5><ol class="uc-steps">
+<li>Abre la pestaña <b>Registros de acceso</b> (consola: opción 2).</li>
+<li>El sistema trae los últimos 200 registros (20 en consola).</li>
+<li>Reemplaza los ids por nombres.</li>
+<li>Muestra la tabla de nuevo a viejo, en verde o rojo.</li>
+<li>La tabla se actualiza sola después de cada lectura.</li>
+</ol></div><div><h5>Flujos alternativos</h5>
+<ul class="uc-alt">
+<li><b>2a</b> No hay registros: Tabla vacía.</li>
+<li><b>3a</b> Tarjeta desconocida: Aparece "Desconocido".</li>
+</ul>
+</div></div>
+<p class="uc-impl"><span>Implementación</span> <code>ReporteService.registrosDetallados()</code>, <code>VentanaPrincipal.refrescarTablas()</code></p><p class="uc-impl"><span>Tests</span> <code>elHistorialMuestraNombresYDesconocidos</code></p>
+</div></details>
+<details class="acc uc"><summary><span class="tag ok">CU-05</span> Consultar alertas <span class="hint">· Guardia</span></summary><div class="body">
+<div class="uc-meta">
+<div><span>Objetivo</span>Revisar las anomalías detectadas.</div><div><span>Precondición</span>Ninguna.</div><div><span>Postcondición</span>Ninguna.</div>
+</div><div class="uc-cols"><div><h5>Flujo principal</h5><ol class="uc-steps">
+<li>Abre la pestaña <b>Alertas</b> (consola: opción 3).</li>
+<li>Ve fecha y hora, tipo y detalle, de la más nueva a la más vieja.</li>
+</ol></div><div><h5>Flujos alternativos</h5>
+<ul class="uc-alt">
+<li><b>2a</b> No hay alertas: Tabla vacía.</li>
+</ul>
+</div></div>
+<p class="uc-impl"><span>Implementación</span> <code>ReporteService.alertasRecientes()</code></p><p class="uc-impl"><span>Tests</span> Indirecto (tests de CU-03)</p>
+</div></details>
+<details class="acc uc"><summary><span class="tag ok">CU-06</span> Bloquear / activar tarjeta <span class="hint">· Administrador</span></summary><div class="body">
+<div class="uc-meta">
+<div><span>Objetivo</span>Impedir o volver a permitir el uso de una tarjeta (por ejemplo, si se pierde).</div><div><span>Precondición</span>La tarjeta existe.</div><div><span>Postcondición</span>El estado queda guardado y las lecturas siguientes lo respetan.</div>
+<div><span>Reglas</span>RN-03</div>
+</div><div class="uc-cols"><div><h5>Flujo principal</h5><ol class="uc-steps">
+<li>Abre la pestaña <b>Tarjetas</b>.</li>
+<li>Ve el inicio del hash, el titular, el estado y la emisión.</li>
+<li>Selecciona una fila y presiona "Bloquear / activar".</li>
+<li>El sistema cambia el estado y lo guarda.</li>
+<li>Refresca la tabla.</li>
+</ol></div><div><h5>Flujos alternativos</h5>
+<ul class="uc-alt">
+<li><b>3a</b> No hay fila seleccionada: Mensaje "Seleccione una tarjeta".</li>
+</ul>
+</div></div>
+<p class="uc-impl"><span>Implementación</span> <code>ControlAccesoService.alternarEstadoTarjeta()</code>, <code>TarjetaRFID.bloquear()</code> / <code>activar()</code>, <code>TarjetaRepository.actualizarEstado()</code></p><p class="uc-impl"><span>Tests</span> <code>bloquearUnaTarjetaImpideElAcceso</code></p>
+</div></details>
+<details class="acc uc"><summary><span class="tag ok">CU-07</span> Generar reporte PDF <span class="hint">· Supervisor</span></summary><div class="body">
+<div class="uc-meta">
+<div><span>Objetivo</span>Obtener un documento con los accesos y las alertas.</div><div><span>Precondición</span>Ninguna (puede salir vacío).</div><div><span>Postcondición</span>Existe <code>reportes/reporte-AAAAMMDD-HHMMSS.pdf</code>.</div>
+</div><div class="uc-cols"><div><h5>Flujo principal</h5><ol class="uc-steps">
+<li>Presiona "Generar reporte PDF" (consola: opción 4).</li>
+<li>El sistema reúne hasta 500 registros y 500 alertas.</li>
+<li>Arma un <code>DatosReporte</code>.</li>
+<li><code>PdfReporteGenerator</code> escribe el archivo (crea la carpeta si no existe).</li>
+<li>Muestra la ruta y abre el PDF si se puede.</li>
+</ol></div><div><h5>Flujos alternativos</h5>
+<ul class="uc-alt">
+<li><b>4a</b> No se puede escribir el archivo: Mensaje de error.</li>
+<li><b>5a</b> Sin visor disponible: Solo se muestra la ruta.</li>
+</ul>
+</div></div>
+<p class="uc-impl"><span>Implementación</span> <code>ReporteService.generarReporte()</code>, <code>ReporteGenerator</code>, <code>PdfReporteGenerator</code></p><p class="uc-impl"><span>Tests</span> <code>generaUnPdfValido</code></p>
+</div></details>
+<h3>Pendientes</h3><div class="grid g2">
+<div class="card uc-pend"><h4><span class="tag pend">CU-08</span> Iniciar sesión</h4><p class="who-line">Todo el personal · resolver antes la pregunta abierta #9</p><p>Login al abrir; según el rol se habilitan o esconden acciones. Contraseñas con BCrypt.</p><p class="uc-impl" style="margin-top:8px"><span>Cambios</span> Tabla <code>usuario</code>, <code>AutenticacionService</code>, <code>LoginDialog</code></p></div>
+<div class="card uc-pend"><h4><span class="tag pend">CU-09</span> Gestionar trabajadores</h4><p class="who-line">Administrador</p><p>Alta, edición y baja lógica, con validación de cédula. Al dar de baja se bloquean sus tarjetas.</p><p class="uc-impl" style="margin-top:8px"><span>Cambios</span> <code>TrabajadorService</code>, columna <code>activo</code>, pestaña nueva</p></div>
+<div class="card uc-pend"><h4><span class="tag pend">CU-10</span> Gestionar zonas</h4><p class="who-line">Administrador</p><p>Crear y editar zonas (código único, nivel y, a futuro, horario).</p><p class="uc-impl" style="margin-top:8px"><span>Cambios</span> <code>ZonaService</code>, <code>ZonaRepository.guardar()</code></p></div>
+<div class="card uc-pend"><h4><span class="tag pend">CU-11</span> Emitir y asignar tarjeta</h4><p class="who-line">Administrador + Lector</p><p>Acercar la tarjeta nueva, calcular el hash, verificar que no exista y asociarla. Ofrece bloquear la anterior.</p><p class="uc-impl" style="margin-top:8px"><span>Cambios</span> <code>TarjetaService</code>, <code>TarjetaRepository.guardar()</code></p></div>
+<div class="card uc-pend"><h4><span class="tag pend">CU-12</span> Registrar salida de la obra</h4><p class="who-line">Trabajador + Lector · resolver antes la pregunta abierta #7</p><p>Lector de salida con el sentido <code>SALIDA</code>; vista "Personas dentro ahora".</p><p class="uc-impl" style="margin-top:8px"><span>Cambios</span> Enum <code>Sentido</code>, columna <code>sentido</code></p></div>
+<div class="card uc-pend"><h4><span class="tag pend">CU-13</span> Reporte con filtros</h4><p class="who-line">Supervisor · resolver antes la pregunta abierta #10</p><p>Rango de fechas, trabajador, zona y resultado; PDF o CSV.</p><p class="uc-impl" style="margin-top:8px"><span>Cambios</span> <code>FiltroRegistro</code>, <code>CsvReporteGenerator</code></p></div>
+<div class="card uc-pend"><h4><span class="tag pend">CU-14</span> Atender / cerrar alerta</h4><p class="who-line">Guardia</p><p>Marcar la alerta como atendida con un comentario; destacar las pendientes.</p><p class="uc-impl" style="margin-top:8px"><span>Cambios</span> Columnas <code>estado</code>, <code>atendida_por</code>, <code>comentario</code></p></div>
+<div class="card uc-pend"><h4><span class="tag pend">CU-15</span> Configurar parámetros</h4><p class="who-line">Administrador · resolver antes la pregunta abierta #6</p><p>Cambiar el horario, el umbral y la ventana de tiempo sin recompilar.</p><p class="uc-impl" style="margin-top:8px"><span>Cambios</span> <code>application.properties</code> o tabla <code>configuracion</code></p></div>
+</div></section>
+<!-- =============================================================== -->
+<section id="mejoras">
+  <h2><span class="num">16</span> Posibles mejoras</h2>
+  <p class="sub">Ideas para crecer después de la demo. <b>Esfuerzo:</b> S = horas · M = 1–3 días · L = una semana o más.</p>
+  <div class="grid g2 mejoras">
+<div class="card"><h4>Funcionalidad</h4><ul class="mej">
+<li><span class="prio hi">Alta</span><span class="mt">Implementar CU-08 a CU-15</span><span class="eff">L</span></li>
+<li><span class="prio hi">Alta</span><span class="mt">Permisos por zona (<code>trabajador_zona</code>)</span><span class="eff">M</span></li>
+<li><span class="prio hi">Alta</span><span class="mt">Panel "Quién está dentro ahora"</span><span class="eff">M</span></li>
+<li><span class="prio mid">Media</span><span class="mt">Vencimiento de tarjetas para visitantes</span><span class="eff">S</span></li>
+<li><span class="prio mid">Media</span><span class="mt">Horarios por zona, turnos y feriados</span><span class="eff">M</span></li>
+<li><span class="prio mid">Media</span><span class="mt">Anti-passback (dos entradas sin salida)</span><span class="eff">M</span></li>
+<li><span class="prio mid">Media</span><span class="mt">Detectar tarjeta clonada (dos zonas en segundos)</span><span class="eff">S</span></li>
+<li><span class="prio mid">Media</span><span class="mt">Alerta de "entró y nunca salió"</span><span class="eff">S</span></li>
+<li><span class="prio lo">Baja</span><span class="mt">Panel de estadísticas</span><span class="eff">M</span></li>
+<li><span class="prio lo">Baja</span><span class="mt">Exportar a CSV o Excel</span><span class="eff">S</span></li>
+<li><span class="prio lo">Baja</span><span class="mt">Notificar por correo o Telegram</span><span class="eff">M</span></li>
+</ul></div>
+<div class="card"><h4>Seguridad</h4><ul class="mej">
+<li><span class="prio hi">Alta</span><span class="mt">HMAC-SHA256 con clave secreta en lugar de SHA-256</span><span class="eff">S</span></li>
+<li><span class="prio hi">Alta</span><span class="mt">Login con BCrypt y roles</span><span class="eff">M</span></li>
+<li><span class="prio mid">Media</span><span class="mt">Auditoría de acciones administrativas</span><span class="eff">S</span></li>
+<li><span class="prio mid">Media</span><span class="mt">Tarjetas criptográficas (DESFire / NTAG 424): el UID se puede clonar</span><span class="eff">L</span></li>
+<li><span class="prio lo">Baja</span><span class="mt">Enmascarar el UID en logs y UI</span><span class="eff">S</span></li>
+</ul></div>
+<div class="card"><h4>Código y arquitectura</h4><ul class="mej">
+<li><span class="prio hi">Alta</span><span class="mt">Inyectar <code>java.time.Clock</code> para probar horarios</span><span class="eff">S</span></li>
+<li><span class="prio hi">Alta</span><span class="mt">Configuración en <code>application.properties</code></span><span class="eff">S</span></li>
+<li><span class="prio mid">Media</span><span class="mt">Logging con SLF4J + Logback</span><span class="eff">S</span></li>
+<li><span class="prio mid">Media</span><span class="mt"><code>SwingWorker</code> para no congelar la UI</span><span class="eff">S</span></li>
+<li><span class="prio mid">Media</span><span class="mt">Migraciones con Flyway</span><span class="eff">S</span></li>
+<li><span class="prio lo">Baja</span><span class="mt">Pool HikariCP en <code>ConexionDB</code></span><span class="eff">S</span></li>
+</ul></div>
+<div class="card"><h4>Datos</h4><ul class="mej">
+<li><span class="prio hi">Alta</span><span class="mt">Persistir datos (H2 en archivo o PostgreSQL)</span><span class="eff">S</span></li>
+<li><span class="prio hi">Alta</span><span class="mt">Baja lógica en lugar de borrar</span><span class="eff">S</span></li>
+<li><span class="prio lo">Baja</span><span class="mt">Retención y archivo de registros viejos</span><span class="eff">S</span></li>
+<li><span class="prio lo">Baja</span><span class="mt">Respaldos automáticos</span><span class="eff">S</span></li>
+</ul></div>
+<div class="card"><h4>Interfaz</h4><ul class="mej">
+<li><span class="prio mid">Media</span><span class="mt">Look moderno con FlatLaf</span><span class="eff">S</span></li>
+<li><span class="prio mid">Media</span><span class="mt">Búsqueda y filtros en tablas</span><span class="eff">S</span></li>
+<li><span class="prio lo">Baja</span><span class="mt">Modo kiosko verde/rojo con sonido</span><span class="eff">M</span></li>
+<li><span class="prio lo">Baja</span><span class="mt">Contador de alertas pendientes</span><span class="eff">S</span></li>
+</ul></div>
+<div class="card"><h4>Calidad y automatización</h4><ul class="mej">
+<li><span class="prio hi">Alta</span><span class="mt">GitHub Actions con <code>mvn test</code> en cada push</span><span class="eff">S</span></li>
+<li><span class="prio mid">Media</span><span class="mt">Tests aislados del detector con repositorios falsos</span><span class="eff">S</span></li>
+<li><span class="prio lo">Baja</span><span class="mt">Cobertura con JaCoCo</span><span class="eff">S</span></li>
+<li><span class="prio lo">Baja</span><span class="mt">Formato automático (Spotless/Checkstyle)</span><span class="eff">S</span></li>
+<li><span class="prio lo">Baja</span><span class="mt">Publicar el <code>.jar</code> en Releases</span><span class="eff">S</span></li>
+</ul></div>
+</div>
+  <h3>Hardware real</h3>
+  <div class="table-wrap"><table><thead><tr><th>Opción</th><th>Cómo se integra</th><th>Esfuerzo</th></tr></thead><tbody>
+    <tr><td><b>Lector USB tipo teclado</b></td><td>El lector "escribe" el UID y un Enter: basta un campo de texto con foco. Es la opción más simple.</td><td>S</td></tr>
+    <tr><td><b>Arduino + RC522</b> (USB/serial)</td><td><code>LectorSerialRFID implements LectorRFID</code> usando jSerialComm.</td><td>M</td></tr>
+    <tr><td><b>ESP32 + RC522</b> (WiFi)</td><td>Envía el UID por HTTP; requiere una pequeña API REST (Javalin o Spring Boot).</td><td>L</td></tr>
+    <tr><td><b>Cerradura + relé, LED y buzzer</b></td><td>Abre físicamente la puerta cuando el resultado es PERMITIDO.</td><td>M</td></tr>
+  </tbody></table></div>
+
+  <h3>Hoja de ruta sugerida</h3>
+  <ol class="roadmap">
+    <li><b>Fase 1 · Base sólida</b><span>Persistir datos, configuración externa, <code>Clock</code>, HMAC, GitHub Actions.</span></li>
+    <li><b>Fase 2 · Gestión</b><span>CU-08 login, CU-09 a CU-11 altas y asignaciones, CU-14 atención de alertas.</span></li>
+    <li><b>Fase 3 · Operación real</b><span>CU-12 entrada/salida y presentes, lector USB o Arduino, permisos por zona.</span></li>
+    <li><b>Fase 4 · Escalar</b><span>API REST, frontend web o móvil, PostgreSQL, notificaciones, varias obras.</span></li>
+  </ol>
+</section>
+
   </main>
 </div>
 
@@ -1029,7 +1295,7 @@ document.querySelectorAll('.tab').forEach(function (tab) {
 // Lightbox para las imagenes PNG
 var lb = document.getElementById('lightbox'), lbImg = lb.querySelector('img');
 document.querySelectorAll('.shot a').forEach(function (a) {
-  if (!/\.png$/.test(a.getAttribute('href'))) return;
+  if (!/\.(png|svg)$/.test(a.getAttribute('href'))) return;
   a.addEventListener('click', function (e) {
     e.preventDefault();
     lbImg.src = a.getAttribute('href');

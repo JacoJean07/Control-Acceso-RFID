@@ -42,6 +42,8 @@ El proyecto nace como un reto para demostrar dominio de **Programación Orientad
 12. [Cómo extender el proyecto](#12-cómo-extender-el-proyecto)
 13. [Preguntas abiertas para el equipo](#13-preguntas-abiertas-para-el-equipo)
 14. [Convenciones del código](#14-convenciones-del-código)
+15. [Casos de uso](#15-casos-de-uso)
+16. [Posibles mejoras](#16-posibles-mejoras)
 
 ---
 
@@ -60,6 +62,8 @@ Cuando alguien acerca su tarjeta:
    - 3 o más intentos fallidos en 5 minutos con la misma tarjeta,
    - acceso permitido fuera del horario laboral (06:00–20:00).
 5. Permite generar un **reporte PDF** con los registros y las alertas.
+
+El detalle de cada funcionalidad, como caso de uso, está en la [sección 15](#15-casos-de-uso) y en [`docs/CASOS_DE_USO.md`](docs/CASOS_DE_USO.md).
 
 **Funcionalidades de la demo:**
 
@@ -241,7 +245,7 @@ Control-Acceso-RFID/
 ├── LICENSE                         GPL-3.0
 ├── .gitignore                      Ignora target/, reportes/, archivos de IDE
 ├── .project, .classpath, .settings/   Configuración de Eclipse (se mantienen, ver §9)
-├── docs/                          Sitio de GitHub Pages (index.html) + capturas en docs/img/
+├── docs/                          Sitio de GitHub Pages (index.html), CASOS_DE_USO.md y capturas en docs/img/
 └── src/
     ├── main/
     │   ├── java/com/shadow/controlacceso/
@@ -597,6 +601,131 @@ Decisiones que cambian el diseño y que conviene acordar antes de avanzar:
 - **JDBC:** siempre `PreparedStatement` con `?` y *try-with-resources*.
 - **Tests:** JUnit 5, un método por escenario, con nombres que describen el comportamiento esperado.
 - **Java 21:** se usan `record`, `switch` con flechas y *pattern matching* en `equals` (`o instanceof Zona z`).
+
+---
+
+## 15. Casos de uso
+
+📄 **Documento completo:** [`docs/CASOS_DE_USO.md`](docs/CASOS_DE_USO.md). Incluye los actores, las reglas de negocio, el flujo paso a paso de cada caso con sus alternativas, las clases y tests que lo implementan, y la matriz de trazabilidad.
+
+![Diagrama de casos de uso](docs/img/casos-de-uso.svg)
+
+| ID | Caso de uso | Actor principal | Estado |
+|---|---|---|---|
+| CU-01 | Solicitar acceso a una zona («include» CU-02) | Trabajador, Lector RFID | ✅ Implementado |
+| CU-02 | Registrar intento de acceso | (sistema) | ✅ Implementado |
+| CU-03 | Detectar anomalías y generar alertas («extend» CU-02) | (sistema) | ✅ Implementado |
+| CU-04 | Consultar historial de accesos | Guardia, Supervisor | ✅ Implementado |
+| CU-05 | Consultar alertas | Guardia | ✅ Implementado |
+| CU-06 | Bloquear / activar tarjeta | Administrador | ✅ Implementado |
+| CU-07 | Generar reporte PDF | Supervisor | ✅ Implementado |
+| CU-08 | Iniciar sesión | Todo el personal | ⏳ Pendiente |
+| CU-09 | Gestionar trabajadores | Administrador | ⏳ Pendiente |
+| CU-10 | Gestionar zonas | Administrador | ⏳ Pendiente |
+| CU-11 | Emitir y asignar tarjeta | Administrador | ⏳ Pendiente |
+| CU-12 | Registrar salida de la obra | Trabajador, Lector RFID | ⏳ Pendiente |
+| CU-13 | Generar reporte con filtros | Supervisor | ⏳ Pendiente |
+| CU-14 | Atender / cerrar una alerta | Guardia | ⏳ Pendiente |
+| CU-15 | Configurar parámetros | Administrador | ⏳ Pendiente |
+
+**Ejemplo, CU-01 Solicitar acceso a una zona** (el resto está en el documento completo):
+
+1. El trabajador acerca su tarjeta al lector de la zona.
+2. El lector envía el UID, la zona y la hora.
+3. El sistema busca la zona, calcula el hash del UID y busca la tarjeta y su titular.
+4. Verifica que la tarjeta exista (si no: *tarjeta desconocida*), que esté activa (si no: *bloqueada*) y que el nivel alcance el de la zona (si no: *nivel insuficiente*).
+5. Registra el intento (CU-02) y, si hay algo raro, genera alertas (CU-03).
+6. Muestra el resultado en verde o rojo.
+
+---
+
+## 16. Posibles mejoras
+
+Ideas para seguir creciendo después de la demo. **Prioridad:** 🔴 alta · 🟡 media · ⚪ baja. **Esfuerzo:** S (horas) · M (1–3 días) · L (una semana o más).
+
+### 16.1 Funcionalidad
+
+| Mejora | Para qué | Prioridad | Esfuerzo |
+|---|---|:-:|:-:|
+| Implementar los casos de uso pendientes (CU-08 a CU-15) | Que el sistema sea usable de verdad: login, altas y bajas, salidas, filtros | 🔴 | L |
+| Permisos **por zona** (tabla `trabajador_zona`) en lugar de niveles lineales | Que el electricista entre al cuarto eléctrico pero no a la grúa | 🔴 | M |
+| Panel **"Quién está dentro ahora"** (requiere CU-12) | Control de aforo y listas para evacuación en emergencias | 🔴 | M |
+| Vencimiento de tarjetas (`fecha_expiracion`) | Tarjetas temporales para visitantes y contratistas | 🟡 | S |
+| Horarios por zona y por turno, con feriados | Turnos nocturnos legítimos sin falsas alertas | 🟡 | M |
+| *Anti-passback*: no permitir dos entradas seguidas sin una salida | Evitar que se preste la tarjeta pasándola hacia atrás | 🟡 | M |
+| Detectar tarjeta clonada: la misma tarjeta en dos zonas en pocos segundos | Seguridad | 🟡 | S |
+| Alerta de "entró y nunca salió" al final de la jornada | Seguridad laboral (persona atrapada o accidentada) | 🟡 | S |
+| Panel de estadísticas: accesos por día, zonas más usadas, rechazos | Ayuda para tomar decisiones | ⚪ | M |
+| Exportar a CSV o Excel (`CsvReporteGenerator`) | Analizar los datos en una hoja de cálculo | ⚪ | S |
+| Notificar alertas críticas por correo o Telegram | Que el supervisor se entere aunque no esté frente a la pantalla | ⚪ | M |
+
+### 16.2 Seguridad
+
+| Mejora | Para qué | Prioridad | Esfuerzo |
+|---|---|:-:|:-:|
+| Usar **HMAC-SHA256 con una clave secreta** (fuera del repo) en lugar de SHA-256 simple | Los UIDs son cortos: un SHA-256 sin clave se puede romper por fuerza bruta | 🔴 | S |
+| Login con contraseñas hasheadas (BCrypt) y roles | Que no cualquiera bloquee tarjetas o vea registros | 🔴 | M |
+| Auditoría de acciones administrativas (quién bloqueó qué y cuándo) | Trazabilidad | 🟡 | S |
+| Tarjetas con autenticación criptográfica (MIFARE DESFire, NTAG 424) en lugar de leer solo el UID | **El UID de las tarjetas baratas se puede clonar.** En un sistema real es el punto más débil | 🟡 | L |
+| No mostrar el UID completo en logs ni en la UI (`CriptoService.enmascararUid`) | Evitar que se filtre el UID | ⚪ | S |
+
+### 16.3 Código y arquitectura
+
+| Mejora | Para qué | Prioridad | Esfuerzo |
+|---|---|:-:|:-:|
+| Inyectar un `java.time.Clock` en lugar de llamar a `LocalDateTime.now()` | Probar horarios con tests sin "fingir" la hora en la UI | 🔴 | S |
+| Configuración externa (`application.properties`) | Cambiar la BD, el horario o el umbral sin recompilar | 🔴 | S |
+| Logging con SLF4J + Logback en lugar de `System.out` | Diagnosticar problemas en producción | 🟡 | S |
+| `SwingWorker` para las consultas | Que la ventana no se congele con una BD remota | 🟡 | S |
+| Migraciones de BD con Flyway | Cambiar el esquema sin perder datos | 🟡 | S |
+| Pool de conexiones HikariCP dentro de `ConexionDB` | Rendimiento con MySQL o PostgreSQL | ⚪ | S |
+| Capa `service` separada para la UI (consultas de lectura vs. comandos) | Que `ControlAccesoService` no crezca demasiado | ⚪ | M |
+
+### 16.4 Datos
+
+| Mejora | Para qué | Prioridad | Esfuerzo |
+|---|---|:-:|:-:|
+| **Persistir los datos** (H2 en archivo, o PostgreSQL / MySQL) | Hoy todo se pierde al cerrar | 🔴 | S |
+| Baja lógica (`activo`) en trabajadores, zonas y tarjetas | No perder el historial al "eliminar" | 🔴 | S |
+| Política de retención: archivar registros de más de N meses | Que la tabla no crezca sin límite | ⚪ | S |
+| Respaldos automáticos | No perder información | ⚪ | S |
+
+### 16.5 Interfaz
+
+| Mejora | Para qué | Prioridad | Esfuerzo |
+|---|---|:-:|:-:|
+| Look & feel moderno (FlatLaf) e íconos | Mejor apariencia con un cambio mínimo | 🟡 | S |
+| Búsqueda y filtros en las tablas (`TableRowSorter`) | Encontrar registros rápido | 🟡 | S |
+| Modo "kiosko" para la puerta: pantalla grande verde o roja, con sonido | Lo que vería el trabajador junto al lector | ⚪ | M |
+| Contador de alertas pendientes en la pestaña | Que el guardia no se pierda ninguna | ⚪ | S |
+
+### 16.6 Calidad y automatización
+
+| Mejora | Para qué | Prioridad | Esfuerzo |
+|---|---|:-:|:-:|
+| **GitHub Actions** que ejecute `mvn test` en cada push y PR | Detectar errores antes de fusionar | 🔴 | S |
+| Tests de `DetectorAnomalias` y `CriptoService` aislados (con repositorios falsos en memoria) | Pruebas más rápidas y precisas | 🟡 | S |
+| Cobertura con JaCoCo | Saber qué parte del código no está probada | ⚪ | S |
+| Formato y estilo automáticos (Spotless o Checkstyle) | Código uniforme entre compañeros | ⚪ | S |
+| Publicar el `.jar` en GitHub Releases | Descargar y probar sin compilar | ⚪ | S |
+
+### 16.7 Hardware real
+
+| Opción | Cómo se integra | Dificultad |
+|---|---|:-:|
+| **Lector USB tipo teclado** (HID) | El lector "escribe" el UID y un Enter: basta un campo de texto con foco. Es la opción más simple. | S |
+| **Arduino + RC522** por USB/serial | `LectorSerialRFID implements LectorRFID` usando jSerialComm | M |
+| **ESP32 + RC522 por WiFi** | El ESP32 envía el UID por HTTP; requiere una pequeña API REST (Javalin o Spring Boot) | L |
+| Cerradura eléctrica + relé, LED y buzzer | Que el sistema abra físicamente la puerta cuando el resultado es PERMITIDO | M |
+
+### 16.8 Hoja de ruta sugerida
+
+| Fase | Objetivo | Incluye |
+|---|---|---|
+| **1. Base sólida** | Que la demo sea confiable | Persistir datos, configuración externa, `Clock`, HMAC, GitHub Actions |
+| **2. Gestión** | Que se pueda administrar sin tocar SQL | CU-08 login, CU-09 a CU-11 altas y asignaciones, CU-14 alertas |
+| **3. Operación real** | Usarlo en una puerta | CU-12 entrada/salida y presentes, lector USB o Arduino, permisos por zona |
+| **4. Escalar** | Varias obras y acceso remoto | API REST, frontend web o móvil, PostgreSQL, notificaciones |
 
 ---
 
